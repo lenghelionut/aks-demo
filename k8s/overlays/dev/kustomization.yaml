@@ -10,13 +10,13 @@ resources:
 images:
 - name: aks-demo
   newName: craksdemodev.azurecr.io/aks-demo
-  newTag: "0.1.0"
+  newTag: 57a2968
 
 patches:
-- target:
-    kind: Deployment
-    name: aks-demo
-  patch: |-
+- patch: |-
     - op: replace
       path: /spec/replicas
       value: 2
+  target:
+    kind: Deployment
+    name: aks-demo
