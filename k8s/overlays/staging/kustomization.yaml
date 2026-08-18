@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: aks-demo
+
+resources:
+- ../../base
+- configmap.yaml
+
+images:
+- name: aks-demo
+  newName: craksdemodev.azurecr.io/aks-demo
+  newTag: "0.1.0"
+
+patches:
+- target:
+    kind: Deployment
+    name: aks-demo
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 2
+- target:
+    kind: HorizontalPodAutoscaler
+    name: aks-demo
+  patch: |-
+    - op: replace
+      path: /spec/minReplicas
+      value: 2
+    - op: replace
+      path: /spec/maxReplicas
+      value: 15

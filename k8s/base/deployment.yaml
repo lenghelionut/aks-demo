@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aks-demo
+  labels:
+    app: aks-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aks-demo
+  template:
+    metadata:
+      labels:
+        app: aks-demo
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - aks-demo
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: aks-demo
+        image: aks-demo:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: aks-demo-config
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 128Mi
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          failureThreshold: 2
+      volumes:
+      - name: tmp
+        emptyDir: {}
