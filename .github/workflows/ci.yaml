@@ -12,6 +12,7 @@ on:
     paths:
     - 'app/**'
     - 'k8s/**'
+  workflow_dispatch:
 
 permissions:
   id-token: write
