@@ -1,18 +1,15 @@
-FROM python:3.12-slim AS builder
+FROM python:3.12-alpine AS builder
 
 WORKDIR /build
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.12-slim
+FROM python:3.12-alpine
 
-RUN groupadd -r appuser && \
-    useradd -r -g appuser -d /app -s /sbin/nologin appuser && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends tini && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apk add --no-cache tini && \
+    addgroup -S appuser && \
+    adduser -S -G appuser -h /app -s /sbin/nologin appuser
 
 WORKDIR /app
 
