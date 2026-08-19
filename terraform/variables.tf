@@ -44,3 +44,9 @@ variable "app_node_max" {
   type        = number
   default     = 3
 }
+
+variable "gitops_repo_url" {
+  description = "GitHub repository URL for GitOps manifests"
+  type        = string
+  default     = "https://github.com/lenghelionut/aks-demo.git"
+}
