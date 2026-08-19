@@ -26,3 +26,11 @@ output "argocd_admin_password_command" {
 output "ingress_ip_command" {
   value = "kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'"
 }
+
+output "grafana_url" {
+  value = "https://grafana.aksdemo.lenghel.dev"
+}
+
+output "grafana_credentials" {
+  value = "kubectl get secret -n monitoring monitoring-grafana -o jsonpath='{.data.admin-password}' | base64 -d"
+}
