@@ -15,6 +15,11 @@ resource "helm_release" "nginx_ingress" {
     value = "2"
   }
 
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-health-probe-request-path"
+    value = "/healthz"
+  }
+
   depends_on = [
     azurerm_kubernetes_cluster.main,
     azurerm_kubernetes_cluster_node_pool.app
