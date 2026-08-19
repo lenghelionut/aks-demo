@@ -10,7 +10,7 @@ resources:
 images:
 - name: aks-demo
   newName: craksdemodev.azurecr.io/aks-demo
-  newTag: 9ad24b3
+  newTag: 540211a
 
 patches:
 - patch: |-
