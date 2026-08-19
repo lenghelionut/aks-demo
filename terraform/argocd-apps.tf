@@ -1,3 +1,8 @@
+resource "time_sleep" "wait_for_argocd_crds" {
+  depends_on      = [helm_release.argocd]
+  create_duration = "30s"
+}
+
 resource "kubectl_manifest" "argocd_app_dev" {
   yaml_body = <<-YAML
     apiVersion: argoproj.io/v1alpha1
@@ -24,7 +29,7 @@ resource "kubectl_manifest" "argocd_app_dev" {
         - CreateNamespace=true
   YAML
 
-  depends_on = [helm_release.argocd]
+  depends_on = [time_sleep.wait_for_argocd_crds]
 }
 
 resource "kubectl_manifest" "argocd_app_staging" {
@@ -53,7 +58,7 @@ resource "kubectl_manifest" "argocd_app_staging" {
         - CreateNamespace=true
   YAML
 
-  depends_on = [helm_release.argocd]
+  depends_on = [time_sleep.wait_for_argocd_crds]
 }
 
 resource "kubectl_manifest" "argocd_app_prod" {
@@ -79,5 +84,5 @@ resource "kubectl_manifest" "argocd_app_prod" {
         - CreateNamespace=true
   YAML
 
-  depends_on = [helm_release.argocd]
+  depends_on = [time_sleep.wait_for_argocd_crds]
 }

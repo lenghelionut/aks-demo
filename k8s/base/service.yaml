@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: aks-demo
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: aks-demo
   ports:

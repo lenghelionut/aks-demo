@@ -10,23 +10,36 @@ resources:
 images:
 - name: aks-demo
   newName: craksdemodev.azurecr.io/aks-demo
-  newTag: 8b7417c
+  newTag: "latest"
 
 patches:
-- patch: |-
+- target:
+    kind: Deployment
+    name: aks-demo
+  patch: |-
     - op: replace
       path: /spec/replicas
       value: 2
-  target:
-    kind: Deployment
+- target:
+    kind: HorizontalPodAutoscaler
     name: aks-demo
-- patch: |-
+  patch: |-
     - op: replace
       path: /spec/minReplicas
       value: 2
     - op: replace
       path: /spec/maxReplicas
       value: 15
-  target:
-    kind: HorizontalPodAutoscaler
+- target:
+    kind: Ingress
     name: aks-demo
+  patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: staging.aksdemo.lenghel.dev
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: staging.aksdemo.lenghel.dev
+    - op: replace
+      path: /spec/tls/0/secretName
+      value: staging-aksdemo-lenghel-dev-tls

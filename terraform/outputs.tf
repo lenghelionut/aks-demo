@@ -22,3 +22,7 @@ output "argocd_url" {
 output "argocd_admin_password_command" {
   value = "kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"
 }
+
+output "ingress_ip_command" {
+  value = "kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'"
+}

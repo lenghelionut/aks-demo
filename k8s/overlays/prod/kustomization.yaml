@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: aks-demo
+namespace: aks-demo-prod
 
 resources:
 - ../../base
@@ -10,7 +10,7 @@ resources:
 images:
 - name: aks-demo
   newName: craksdemodev.azurecr.io/aks-demo
-  newTag: "0.1.0"
+  newTag: "latest"
 
 patches:
 - target:
@@ -30,3 +30,16 @@ patches:
     - op: replace
       path: /spec/maxReplicas
       value: 20
+- target:
+    kind: Ingress
+    name: aks-demo
+  patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: prod.aksdemo.lenghel.dev
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: prod.aksdemo.lenghel.dev
+    - op: replace
+      path: /spec/tls/0/secretName
+      value: prod-aksdemo-lenghel-dev-tls
