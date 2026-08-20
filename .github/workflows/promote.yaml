@@ -1,0 +1,35 @@
+name: Promote to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Image tag to promote (git SHA)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  promote:
+    name: Promote to Production
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Update prod image tag
+      run: |
+        cd k8s/overlays/prod
+        kustomize edit set image aks-demo=craksdemodev.azurecr.io/aks-demo:${{ inputs.image_tag }}
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v6
+      with:
+        title: "promote: release ${{ inputs.image_tag }} to production"
+        body: |
+          Promoting image tag `${{ inputs.image_tag }}` to production.
+        branch: promote/${{ inputs.image_tag }}-to-prod
+        commit-message: "promote: release ${{ inputs.image_tag }} to production"
