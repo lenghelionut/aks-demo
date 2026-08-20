@@ -45,9 +45,10 @@ resource "azurerm_kubernetes_cluster" "main" {
   default_node_pool {
     name                = "system"
     node_count          = var.system_node_count
-    vm_size             = "Standard_D2ls_v7"
+    vm_size             = "Standard_D2s_v7"
     vnet_subnet_id      = azurerm_subnet.aks.id
     os_disk_size_gb     = 30
+    temporary_name_for_rotation = "systemtmp"
 
     upgrade_settings {
       max_surge = "1"
@@ -70,12 +71,14 @@ resource "azurerm_kubernetes_cluster" "main" {
 resource "azurerm_kubernetes_cluster_node_pool" "app" {
   name                  = "app"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.main.id
-  vm_size               = "Standard_D2ls_v7"
+  vm_size               = "Standard_D2s_v7"
   auto_scaling_enabled  = true
   min_count             = var.app_node_min
   max_count             = var.app_node_max
   vnet_subnet_id        = azurerm_subnet.aks.id
   os_disk_size_gb       = 30
+  temporary_name_for_rotation = "apptmp"
+
 
   node_labels = {
     "workload" = "application"

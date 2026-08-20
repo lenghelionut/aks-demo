@@ -16,6 +16,11 @@ resource "helm_release" "argocd" {
     value = "true"
   }
 
+  set {
+    name  = "dex.enabled"
+    value = "false"
+  }
+
   depends_on = [
     azurerm_kubernetes_cluster.main,
     azurerm_kubernetes_cluster_node_pool.app
