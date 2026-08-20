@@ -14,7 +14,7 @@ Grafana:    https://grafana.aksdemo.lenghel.dev/
 
 
 ## Project structure
-
+```
 ├── README.md
 ├── app                             # Flask API (version, health, readiness endpoints)
 │   ├── Dockerfile
@@ -52,6 +52,7 @@ Grafana:    https://grafana.aksdemo.lenghel.dev/
     │   └── setup-backend.sh        # Used to bootstrap the storage account
     ├── terraform.tfvars            # Has to be created, ignored by git
     └── variables.tf                # Parameterized configuration
+```
 
 ## Prerequisites
 - Azure account with an active subscription
@@ -135,9 +136,9 @@ Or it can be done via ArgoCD UI by clicking on the Sync button on the aks-demo-p
 
 ### 6. Access the Services
 The 3 environments are publicly open:
-Dev app: https://dev.aksdemo.lenghel.dev
-Staging app: https://staging.aksdemo.lenghel.dev
-Prod app: https://prod.aksdemo.lenghel.dev
+- Dev app: https://dev.aksdemo.lenghel.dev
+- Staging app: https://staging.aksdemo.lenghel.dev
+- Prod app: https://prod.aksdemo.lenghel.dev
 
 The ArgoCD and Grafana passwords can be retrieved by:
 ```bash
@@ -186,14 +187,14 @@ Note: Due to free-tier vCPU quota limits (4 vCPUs total), the system pool runs w
 ### CI/CD pipeline:
 CI is achieved using Github actions.
 Pipeline stages:
-1. Checkout — clone the repository
-2. Tag — generate image tag from git SHA (immutable, traceable)
-3. Build — multi-stage Docker build
-4. Scan — Trivy vulnerability scan; fails on CRITICAL/HIGH CVEs
-5. Login — OIDC federation to Azure (passwordless)
-6. Push — push image to ACR with SHA tag and `latest`
-7. Update — update dev and staging Kustomize overlays with new tag
-8. Commit — push manifest changes back to repository
+- Checkout — clone the repository
+- Tag — generate image tag from git SHA (immutable, traceable)
+- Build — multi-stage Docker build
+- Scan — Trivy vulnerability scan; fails on CRITICAL/HIGH CVEs
+- Login — OIDC federation to Azure (passwordless)
+- Push — push image to ACR with SHA tag and `latest`
+- Update — update dev and staging Kustomize overlays with new tag
+- Commit — push manifest changes back to repository
 
 CD is achieved using ArgoCD.
 - Dev/Staging auto-sync with self-heal — every CI push deploys automatically
